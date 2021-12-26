@@ -1,80 +1,33 @@
-/*
-	Radius by TEMPLATED
-	templated.co @templatedco
-	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
-*/
+jQuery(document).ready(function($) {
 
-(function($) {
-
-	skel.breakpoints({
-		xlarge:	'(max-width: 1680px)',
-		large:	'(max-width: 1280px)',
-		medium:	'(max-width: 980px)',
-		small:	'(max-width: 736px)',
-		xsmall:	'(max-width: 480px)'
+    /* ======= Scrollspy ======= */
+    $('body').scrollspy({ target: '#header', offset: 400});
+    
+    /* ======= Fixed header when scrolled ======= */
+    
+    $(window).bind('scroll', function() {
+         if ($(window).scrollTop() > 50) {
+             $('#header').addClass('navbar-fixed-top');
+         }
+         else {
+             $('#header').removeClass('navbar-fixed-top');
+         }
+    });
+   
+    /* ======= ScrollTo ======= */
+    $('a.scrollto').on('click', function(e){
+        
+        //store hash
+        var target = this.hash;
+                
+        e.preventDefault();
+        
+		$('body').scrollTo(target, 800, {offset: -70, 'axis':'y', easing:'easeOutQuad'});
+        //Collapse mobile menu after clicking
+		if ($('.navbar-collapse').hasClass('in')){
+			$('.navbar-collapse').removeClass('in').addClass('collapse');
+		}
+		
 	});
 
-	$(function() {
-
-		var	$window = $(window),
-			$body = $('body'),
-			$header = $('#header'),
-			$footer = $('#footer');
-
-		// Disable animations/transitions until the page has loaded.
-			$body.addClass('is-loading');
-
-			$window.on('load', function() {
-				window.setTimeout(function() {
-					$body.removeClass('is-loading');
-				}, 100);
-			});
-
-		// Fix: Placeholder polyfill.
-			$('form').placeholder();
-
-		// Prioritize "important" elements on medium.
-			skel.on('+medium -medium', function() {
-				$.prioritize(
-					'.important\\28 medium\\29',
-					skel.breakpoint('medium').active
-				);
-			});
-
-		// Header.
-			$header.each( function() {
-
-				var t 		= jQuery(this),
-					button 	= t.find('.button');
-
-				button.click(function(e) {
-
-					t.toggleClass('hide');
-
-					if ( t.hasClass('preview') ) {
-						return true;
-					} else {
-						e.preventDefault();
-					}
-
-				});
-
-			});
-
-		// Footer.
-			$footer.each( function() {
-
-				var t 		= jQuery(this),
-					inner 	= t.find('.inner'),
-					button 	= t.find('.info');
-
-				button.click(function(e) {
-					t.toggleClass('show');
-					e.preventDefault();
-				});
-
-			});
-
-	});
-
-})(jQuery);
+});
