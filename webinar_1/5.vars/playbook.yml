@@ -1,0 +1,40 @@
+- hosts: appservers
+  vars:
+    root_dir: "/data/nginx/html"
+
+  tasks:
+    - name: create directory for nginx files
+      file:
+        path: "{{ root_dir }}"
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+      become: yes
+
+    - name: update nginx config
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: nginx
+      notify:
+        - reload nginx
+      become: yes
+
+    - name: update nginx statics
+      copy:
+        src: "files/"
+        dest: "{{ root_dir }}"
+        owner: nginx
+      notify:
+        - reload nginx
+      become: yes
+
+  handlers:
+    - name: reload nginx
+      service:
+        name: nginx
+        state: reloaded
+        daemon_reload: yes
+        enabled: yes
+      become: yes

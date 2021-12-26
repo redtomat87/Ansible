@@ -1,0 +1,76 @@
+- hosts: appservers
+  tasks:
+    - name: Install EPEL repo
+      yum:
+        name: epel-release
+        state: present
+      become: yes
+
+    - name: creating a docker repository
+      yum_repository:
+        description: repo for docker
+        name: docker
+        baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable/
+        gpgcheck: no
+      tags: docker
+      become: yes
+
+    - name: install redis server
+      yum:
+        name: redis
+        state: present
+      become: yes
+      tags: redis
+
+    - name: Bind redis for all interfaces
+      lineinfile:
+        path: /etc/redis.conf
+        regexp: '^bind '
+        insertafter: '^# bind '
+        line: "bind 0.0.0.0"
+      become: yes
+      tags: redis
+
+    - name: restart redis
+      service:
+        name: redis
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+      become: yes
+      tags: redis
+
+    - name: install docker service
+      yum:
+        name: docker-ce
+        state: present
+      become: yes
+      tags: docker
+#       yum install docker
+
+    - name: restart docker
+      service:
+        name: docker.service
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+      become: yes
+      tags: docker
+
+    - name: update docker config
+      copy:
+        src: files/daemon.json
+        dest: /etc/docker/daemon.json
+      become: yes
+      tags: docker
+
+    - name: restart docker
+      service:
+        name: docker.service
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+      become: yes
+      tags: docker
+
+

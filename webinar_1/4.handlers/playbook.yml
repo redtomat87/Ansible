@@ -1,0 +1,16 @@
+- hosts: appservers
+  tasks:
+    - name: update docker config
+      copy:
+        src: files/daemon.json
+        dest: /etc/docker/daemon.json
+      notify:
+        - restarted docker
+      become: yes
+
+  handlers:
+    - name: restarted docker
+      service:
+        name: docker
+        state: restarted
+      become: yes

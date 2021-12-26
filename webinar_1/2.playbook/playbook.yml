@@ -1,0 +1,31 @@
+---
+
+- hosts: appservers
+  tasks:
+    - name: Install EPEL repo
+      yum:
+        name: epel-release
+        state: present
+      become: yes
+
+    - name: install nginx server
+      yum:
+        name: nginx
+        state: present
+        update_cache: yes
+      become: yes
+#       yum install nginx
+#    - name: remove nginx server
+#      yum:
+#        name: nginx
+#        state: absent
+#      become: yes
+#       yum remove nginx
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+      become: yes
