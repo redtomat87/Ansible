@@ -1,9 +1,9 @@
 ---
 
 - name: reload vsftpd
-  service:
+  systemd:
     name: vsftpd
-    state: reloaded
+    state: started
     daemon_reload: yes
     enabled: yes
   become: yes
