@@ -1,0 +1,9 @@
+---
+
+- name: reload vsftpd
+  service:
+    name: vsftpd
+    state: reloaded
+    daemon_reload: yes
+    enabled: yes
+  become: yes
