@@ -12,7 +12,8 @@ http {
 
     server {
         location / {
-            root {{ root_dir }};
+#            root {{ root_dir }};
+#            root {{ root_dir }}/wordpress;
             index index.html;
         }
     }

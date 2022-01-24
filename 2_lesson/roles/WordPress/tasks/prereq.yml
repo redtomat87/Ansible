@@ -1,0 +1,73 @@
+---
+
+
+#- name: Install PyMySQL
+#  block:
+#
+#    - name: Install pip and other for PyMySQL
+#      yum:
+#        name:
+#          - mysql-devel
+#          - python3-PyMySQL
+#          - python39
+#          - python39-devel
+#          - python39-pip
+#          - gcc
+#        state: present
+#        update_cache: yes
+#
+#    - name: Install Required PyMySQL
+#      pip:
+#        name:
+#          - PyMySQL
+#        state: present
+#        executable: pip3
+
+#- name: Download and unziped wordpress source
+#  block:
+#    - name: Download wordpress archive
+#      get_url:
+#        url: https://wordpress.org/latest.zip
+#        dest: /tmp/wordpress.zip
+
+    - name: Copy wordpress archive
+      copy:
+        src: files/wordpress-5.8.3.zip
+        dest: /tmp/wordpress.zip
+
+
+    - name: Check that wordpress folder was create before
+      stat:
+        path: "{{ root_dir }}"
+      register: folder_existing
+
+    - name: Create folder if it's not be created before
+      file:
+        path: "{{ root_dir }}"
+        state: directory
+        owner: nginx
+        group: nginx
+        mode: 0775
+      when: not folder_existing.stat.exists
+
+    - name: Unarchive a wordpress archive
+      unarchive:
+        src: /tmp/wordpress.zip
+        dest: "{{ root_dir }}"
+        mode: 0755
+        remote_src: yes
+
+#
+#    - name: Check that wordpress folder was create before
+#      stat:
+#        path: "{{ root_dir }}/wordpress"
+#      register: folder_existing
+#
+#    - name: Create folder if it's not be created before
+#      file:
+#        path: "{{ root_dir }}/wordpress"
+#        state: directory
+#        owner: nginx
+#        group: nginx
+#        mode: 0775
+#      when: not folder_existing.stat.exists

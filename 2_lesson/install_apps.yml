@@ -2,7 +2,10 @@
 
 - hosts: appservers
   roles:
-    - vsftpd
-    - new-user
+#    - vsftpd
+#    - new-user
 #    - nginx
+#    - FPM
+    - mysql
+    - WordPress
 

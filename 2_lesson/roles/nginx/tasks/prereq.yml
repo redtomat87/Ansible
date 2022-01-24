@@ -9,3 +9,27 @@
         mode: 0755
         owner: root
         group: root
+
+
+- name: Check that wordpress folder was create before
+  stat:
+    path: "{{ root_dir }}/wordpress"
+  register: folder_existing
+
+- name: Create folder if it's not be created before
+  file:
+    path: "{{ root_dir }}/wordpress"
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: 0775
+  when: not folder_existing.stat.exists
+
+- name: Config firewalld
+  block:
+    - name: Config firewalld
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes

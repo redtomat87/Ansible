@@ -1,0 +1,23 @@
+---
+
+- name: Install PyMySQL
+  block:
+
+    - name: Install pip and other for PyMySQL
+      yum:
+        name:
+          - mysql-devel
+          - python3-PyMySQL
+          - python39
+          - python39-devel
+          - python39-pip
+          - gcc
+        state: present
+        update_cache: yes
+
+    - name: Install Required PyMySQL
+      pip:
+        name:
+          - PyMySQL
+        state: present
+        executable: pip3
