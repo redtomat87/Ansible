@@ -32,7 +32,7 @@
 
     - name: Copy wordpress archive
       copy:
-        src: files/wordpress-5.8.3.zip
+        src: files/wordpress-5.8.3-ru_RU.zip
         dest: /tmp/wordpress.zip
 
 

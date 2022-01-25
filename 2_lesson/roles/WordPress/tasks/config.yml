@@ -15,12 +15,12 @@
         db: wordpress
         state: present
 
-- name: Config wordpress
-  block:
-    - name: Put correct wp-config.php
-      template:
-        src: templates/wp-config.php.j2
-        dest: "{{root_dir}}/wordpress/wp-config.php"
+#- name: Config wordpress
+#  block:
+#    - name: Put correct wp-config.php
+#      template:
+#        src: templates/wp-config.php.j2
+#        dest: "{{root_dir}}/wordpress/wp-config.php"
 
     - name: Configurate rights for nginx ueser
       file:
@@ -30,7 +30,7 @@
         mode: 0755
         recurse: yes
 
-    - name: Put wordpress.conf
-      template:
-        src: templates/wordpress.conf.j2
-        dest: "/etc/nginx/conf.d/wordpress.conf"
+#    - name: Put wordpress.conf
+#      template:
+#        src: templates/wordpress.conf.j2
+#        dest: "/etc/nginx/conf.d/wordpress.conf"

@@ -6,6 +6,6 @@
 #    - new-user
 #    - nginx
 #    - FPM
-    - mysql
+#    - mysql
     - WordPress
 
