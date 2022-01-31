@@ -10,6 +10,4 @@ admin_email: [mr_tomat@mail.ru]
 
 mysql_root_pwd: [vm2504]
 
-mysql_wordpress_password: "vm2504"
-
-word_press_root_dir: "/srv"
+mysql_wordpress_password: [vm2504]

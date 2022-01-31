@@ -1,0 +1,9 @@
+---
+
+- name: reload php-fpm
+  service:
+    name: php-fpm
+    state: reloaded
+    daemon_reload: yes
+    enabled: yes
+#  become: yes

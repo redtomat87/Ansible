@@ -1,0 +1,7 @@
+---
+
+root_dir: "/data2/nginx/html"
+
+deploy_user:
+  name: deploy_user
+  passwd: '2Tdhj>71'

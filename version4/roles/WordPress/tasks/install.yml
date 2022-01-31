@@ -1,0 +1,23 @@
+---
+
+#- name: Install vsftpd repo and packages
+#  block:
+#    - name: Install EPEL repo
+#      yum:
+#        name: epel-release
+#        state: present
+#
+#    - name: install vsftpd server
+#      yum:
+#        name: vsftpd
+#        state: present
+#        update_cache: yes
+#      notify:
+#        - reload vsftpd
+#
+#    - name: start vsftpd
+#      systemd:
+#        name: vsftpd
+#        daemon_reload: yes
+#        state: started
+#        enabled: yes
