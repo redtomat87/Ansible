@@ -1,0 +1,12 @@
+---
+
+- name: Detect prerequisites
+  include_tasks: "distribution-detect.yml"
+
+- name: install python pip module via package manager
+  import_role:
+    name: os/package
+  vars:
+    package_action: "install"
+    package_list: "{{ pip_packages }}"
+  when: pip_packages is defined

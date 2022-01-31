@@ -1,0 +1,30 @@
+---
+
+- name: Check the unit
+  import_tasks: "check-unit.yml"
+
+- name: Enable the unit
+  block:
+    - name: "Check if the {{ unit_name }} unit is masked"
+      shell: "systemctl status {{ unit_name }} | grep 'Loaded:' | awk '{print($2)}'"
+      failed_when: mask_status.stdout|regex_search('masked')
+      register: mask_status
+
+    - name: "Enable the {{ unit_name }} unit"
+      systemd:
+        name: "{{ unit_name }}"
+        enabled: yes
+        daemon_reload: yes
+
+    - name: "Ensure if the {{ unit_name }} unit is really enabled within 2 minutes"
+      shell: "systemctl status {{ unit_name }} | grep 'Loaded:' | cut -f2 -d'(' | cut -f1 -d')' | cut -f2 -d';' | awk '{print($1)}'"
+      register: enable_status
+      until: enable_status.stdout|regex_search('enabled')
+      retries: 24
+      delay: 5
+  rescue:
+    - name: "The {{ unit_name }} unit is masked"
+      fail:
+        msg: "It seems to be a configuration issue due to the unit is masked. You shouldn't disable or enable unit when the unit is masked."
+  when:
+    - check_unit.stat.exists

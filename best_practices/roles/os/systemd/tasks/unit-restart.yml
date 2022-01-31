@@ -1,0 +1,14 @@
+---
+
+- name: Check the unit
+  import_tasks: "check-unit.yml"
+
+- name: Restart the unit
+  block:
+    - name: "Stop the {{ unit_name }} unit"
+      include_tasks: "unit-stop.yml"
+
+    - name: "Start the {{ unit_name }} unit"
+      include_tasks: "unit-start.yml"
+  when:
+    - check_unit.stat.exists

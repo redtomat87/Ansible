@@ -1,0 +1,40 @@
+---
+
+common:
+  rpm_packages:
+    - bash-completion
+    - bind-utils
+    - bwm-ng
+    - bzip2
+    - cloud-utils-growpart
+    - curl
+    - fio
+    - firewalld
+    - fping
+    - gdisk
+    - gzip
+    - htop
+    - iftop
+    - iotop
+    - iperf3
+    - jq
+    - lshw
+    - lsof
+    - lz4
+    - nano
+    - nc
+    - ncdu
+    - net-tools
+    - procps-ng
+    - psmisc
+    - pv
+    - rsync
+    - screen
+    - tar
+    - tcpdump
+    - telnet
+    - traceroute
+    - tree
+    - unzip
+    - vim
+    - wget

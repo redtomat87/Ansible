@@ -1,0 +1,11 @@
+---
+
+- name: Install nginx packages
+  block:
+    - name: install nginx
+      import_role:
+        name: os/package
+      vars:
+        package_action: "install"
+        package_list:
+          - "nginx"

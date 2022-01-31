@@ -1,0 +1,10 @@
+---
+
+- name: "Clear PageCache (1), dentries and inodes (2)"
+  cron:
+    name: "Clear PageCache, dentries and inodes"
+    user: "root"
+    minute: "0"
+    hour: "*/1"
+    job: "sync && echo 3 > /proc/sys/vm/drop_caches"
+    state: present

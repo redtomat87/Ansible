@@ -1,0 +1,15 @@
+---
+
+- name: Check selinux status
+  command: getenforce
+  register: sestatus
+  changed_when: false
+
+- name: set selinux permissive
+  command: 'setenforce 0'
+  when: '"Permissive" not in sestatus.stdout'
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive

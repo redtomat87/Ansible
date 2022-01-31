@@ -1,0 +1,11 @@
+---
+
+- name: Install common packages
+  import_role:
+    name: os/package
+  vars:
+    package_action: "install"
+    package_list: "{{ common.rpm_packages }}"
+
+- name: Install python pip package
+  include_tasks: "package-install-pip.yml"

@@ -1,0 +1,6 @@
+.vault_pass
+/home/vk/PycharmProjects/Ansible/best_practices/roles/infra/consul-cluster/files/consul_1.11.2_linux_amd64.zip
+/home/vk/PycharmProjects/Ansible/best_practices/roles/infra/consul-agent/files/consul_1.11.2_linux_amd64.zip
+/home/vk/PycharmProjects/Ansible/best_practices/roles/monitoring/grafana/files/grafana-8.3.4-1.x86_64.rpm
+/home/vk/PycharmProjects/Ansible/best_practices/roles/monitoring/node_exporter/files/node_exporter-1.3.1.linux-amd64.tar.gz
+/home/vk/PycharmProjects/Ansible/best_practices/roles/monitoring/prometheus/files/prometheus-2.33.0.linux-amd64.tar.gz

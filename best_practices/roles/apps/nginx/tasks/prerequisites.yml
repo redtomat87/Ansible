@@ -1,0 +1,35 @@
+---
+
+- service_facts:
+
+- name: Prepare step for nginx
+  block:
+    - name: create directory for nginx files
+      file:
+        path: "{{ root_dir }}"
+        state: directory
+        mode: 0755
+        owner: root
+        group: root
+
+- name: Firewalld
+  block:
+    - name: Open port
+      firewalld:
+        port: "{{ item  }}"
+        permanent: yes
+        state: enabled
+      loop:
+        - "80/tcp"
+        - "443/tcp"
+
+    - name: configure. open port http for nginx.service
+      firewalld:
+        service: http
+        permanent: yes
+        immediate: no
+        state: enabled
+
+    - name: Reload firewalld service
+      command: firewall-cmd --reload
+  when: "'firewalld.service' in ansible_facts.services"

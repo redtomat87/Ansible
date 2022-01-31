@@ -1,0 +1,4 @@
+---
+
+- import_tasks: dnf_repos.yml
+  tags: ['dnf-repos']

@@ -1,0 +1,10 @@
+---
+
+- name: install epel-release repo
+  import_role:
+    name: os/package
+  vars:
+    package_action: "install"
+    package_list:
+      - "epel-release"
+
