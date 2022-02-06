@@ -1,11 +1,15 @@
 ---
 
-- hosts: appservers
+#- hosts: appservers
+#  roles:
+#    - vsftpd
+#    - nginx
+#    - FPM
+#    - mysql
+#    - WordPress
+- hosts: all
   roles:
-    - vsftpd
+    - os/logrotate
+    - os/ntp
     - os/new-user
-    - nginx
-    - FPM
-    - mysql
-    - WordPress
 

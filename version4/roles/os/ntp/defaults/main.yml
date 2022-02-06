@@ -1,8 +1,8 @@
 ---
 
-root_dir: "/data/nginx/html"
-
-ntp:
+ntp_defaults:
+  timezone: "Europe/Moscow"
+  tzdata_package: tzdata
   servers:
     - "0.ru.pool.ntp.org"
     - "1.ru.pool.ntp.org"

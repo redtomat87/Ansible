@@ -1,0 +1,47 @@
+---
+
+#- name: 'PREREQ | prereq nginx'
+#  import_tasks: "prereq.yml"
+#  tags: ['nginx', 'nginx::prereq']
+
+#- name: 'INSTALL | install vsftpd'
+#  import_tasks: "install.yml"
+#  tags: ['php-fpm']
+
+#- name: 'CONFIG | config nginx'
+#  import_tasks: "config.yml"
+#  tags: ['nginx', 'nginx::config']
+
+- name: Find out if it is baremetal or vm
+  command: 'systemd-detect-virt'
+  register: virt
+  ignore_errors: true
+
+#- name: 'CLEAN | NTP service'
+#  include_tasks:
+#    file: "clean.yml"
+#    apply:
+#      tags: ['ntp::clean', "never"]
+#  loop_control:
+#    loop_var: prevtype
+#  loop:
+#    - 'chrony'
+#    - 'ntp'
+#  tags: ['always']
+#  when: virt.stdout != "lxc"
+
+- name: 'INSTALL | NTP service'
+  include_tasks:
+    file: "install.yml"
+    apply:
+      tags: ['ntp','ntp::install']
+  tags: ['always']
+  when: virt.stdout != "lxc"
+
+- name: 'set timezone for lxc'
+  include_tasks:
+    file: "timezone.yml"
+    apply:
+      tags: ['timezone']
+  tags: ['always']
+  when: virt.stdout == "lxc"

@@ -7,9 +7,9 @@
       yum:
         name:
           - mysql-devel
-#          - python3-PyMySQL
-#          - python39
-#          - python39-devel
+          - python3-PyMySQL
+          - python39
+          - python39-devel
           - python39-pip
           - gcc
         state: present
