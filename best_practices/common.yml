@@ -8,3 +8,4 @@
     - os/logrotate
     - os/firewalld
     - os/common
+    - os/ntp

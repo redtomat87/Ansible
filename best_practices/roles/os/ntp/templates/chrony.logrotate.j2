@@ -1,0 +1,12 @@
+{{ ntp_logdir }}/*.log {
+    missingok
+    nocreate
+    maxsize 10M
+    hourly
+    compress
+    rotate 5
+    sharedscripts
+    postrotate
+        /usr/bin/chronyc cyclelogs > /dev/null 2>&1 || true
+    endscript
+}

@@ -1,9 +1,9 @@
 root_dir: "/data/nginx/html"
 
-product: "lenovo"
+product: "test"
 city: "home"
 provider: "local"
-provider_type: "laptop"
+provider_type: "pc"
 datacenter: "kdt-{{ provider }}-{{ city }}-{{ provider_type }}"
 architecture: linux-amd64
 logrotate_dir: /etc/logrotate.d

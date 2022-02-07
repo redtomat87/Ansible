@@ -1,3 +1,4 @@
+.vault_pass.old
 .vault_pass
 /home/vk/PycharmProjects/Ansible/best_practices/roles/infra/consul-cluster/files/consul_1.11.2_linux_amd64.zip
 /home/vk/PycharmProjects/Ansible/best_practices/roles/infra/consul-agent/files/consul_1.11.2_linux_amd64.zip

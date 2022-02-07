@@ -56,7 +56,7 @@
     src: "{{ ntp_config_file | basename }}.j2"
     dest: "{{ ntp_config_file }}"
 
-- name: Initiate the reqest to get time
+- name: Initiate the request to get time
   shell: "ntpdate -b {{ item }}"
   loop: "{{ ntp_server_list }}"
   register: result
@@ -73,7 +73,7 @@
 - name: Sync hwclock
   shell: "hwclock -w -D"
 
-- name: Check NTP is synchronized for 2 minutes
+- name: Check NTP is synchronized for 2 munites
   shell: "chronyc tracking | grep Stratum | cut -f2 -d: | awk '{print($1)}'"
   register: result
   until: result.stdout != '10'
@@ -81,7 +81,7 @@
   delay: 5
   when: type == 'chrony'
 
-- name: Check NTP is synchronized for 2 minutes
+- name: Check NTP is synchronized for 2 munites
   shell: "ntpstat | head -1"
   register: result
   until: not result.stdout|regex_search('unsynchronised')
@@ -94,15 +94,15 @@
     name: os/logrotate
     tasks_from: install
 
-#- name: Delete logrotate file
-#  file:
-#    path: "{{ logrotate_dir }}/{{ type }}"
-#    state: absent
-#
-#- name: Generate logrotate file
-#  template:
-#    src: "{{ type }}.logrotate.j2"
-#    dest: "{{ logrotate_dir }}/{{ type }}"
-#    owner: root
-#    group: root
-#    mode: 0644
+- name: Delete logrotate file
+  file:
+    path: "{{ logrotate_dir }}/{{ type }}"
+    state: absent
+
+- name: Generate logrotate file
+  template:
+    src: "{{ type }}.logrotate.j2"
+    dest: "{{ logrotate_dir }}/{{ type }}"
+    owner: root
+    group: root
+    mode: 0644

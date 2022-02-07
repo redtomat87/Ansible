@@ -1,0 +1,9 @@
+---
+
+ntp_service: chronyd
+ntp_packages:
+  - chrony
+ntp_config_file: /etc/chrony.conf
+ntp_driftfile: /var/lib/chrony/drift
+ntp_keyfile: /etc/chrony.keys
+ntp_logdir: /var/log/chrony
