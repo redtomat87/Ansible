@@ -1,0 +1,28 @@
+---
+
+- name: Gather facts
+  setup:
+
+- name: "Detect the distribution"
+  block:
+    - name: Ensure if the distribution is CentOS/RHEL 7
+      set_fact:
+        pip_packages: "{{ pip_packages|default([]) + [ package_name ] }}"
+      loop:
+        - "python2-pip"
+      loop_control:
+        loop_var: package_name
+      when:
+        - ansible_distribution|regex_search('^(CentOS|RedHat)')
+        - ansible_distribution_version|regex_search('^7')
+
+    - name: Ensure if the distribution is CentOS/RHEL 8
+      set_fact:
+        pip_packages: "{{ pip_packages|default([]) + [ package_name ] }}"
+      loop:
+        - "python3-pip"
+      loop_control:
+        loop_var: package_name
+      when:
+        - ansible_distribution|regex_search('^(CentOS|RedHat|Fedora|ALmaLinux|Rocky)')
+        - ansible_distribution_version|regex_search('^8') or ansible_distribution_version|int >= 28

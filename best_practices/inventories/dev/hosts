@@ -16,3 +16,6 @@ consul-server
 
 [prometheus]
 192.168.88.17
+
+[vip_pg]
+ip adress of postgress cluster leader

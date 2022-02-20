@@ -1,0 +1,15 @@
+root_dir: "/data/nginx/html"
+
+prometheus:
+  user: prometheus
+  group: prometheus
+  version: 2.33.1
+  remove_src: true
+  dir: "/data/prometheus"
+  targets_dir: "/data/prometheus/targets"
+  alerts_dir: "/data/prometheus/alerts"
+  bin_sources: "/data/prometheus-sources"
+  download_dir: "/data/downloads"
+  log: /var/log/prometheus/prometheus.log
+  storage: /home/prometheus/data
+  retention_time: 360d

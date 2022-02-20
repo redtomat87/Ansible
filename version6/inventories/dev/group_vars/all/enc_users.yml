@@ -1,0 +1,19 @@
+---
+
+pg_django:
+  db_name: 'testapp'
+  user: 'django_test'
+  pass: 'vm2504'
+  port: '6432'
+  cluster_name: 'postgres-cluster'
+
+django_default:
+  user_name: admin
+  user_password: vm2504
+  email: mr_tomat@mail.ru
+
+deploy_user:
+  name: vm
+  passwd: 'vm2504'
+
+admin_email: [ mr_tomat@mail.ru ]

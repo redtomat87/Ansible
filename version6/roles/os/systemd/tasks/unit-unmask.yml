@@ -1,0 +1,21 @@
+---
+
+- name: Check the unit
+  import_tasks: "check-unit.yml"
+
+- name: Unmask the unit
+  block:
+    - name: "Unmask the {{ unit_name }} unit"
+      systemd:
+        name: "{{ unit_name }}"
+        masked: no
+        daemon_reload: yes
+
+    - name: "Ensure if the {{ unit_name }} unit is really unmasked within 2 minutes"
+      shell: "systemctl status {{ unit_name }} | grep 'Loaded:' | awk '{print($2)}'"
+      register: unmask_status
+      until: not unmask_status.stdout|regex_search('masked')
+      retries: 24
+      delay: 5
+  when:
+    - check_unit.stat.exists

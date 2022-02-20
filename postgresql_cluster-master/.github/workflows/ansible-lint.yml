@@ -1,0 +1,68 @@
+---
+# yamllint disable rule:truthy
+
+name: Ansible-lint
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git clone repo postgresql_cluster
+        uses: actions/checkout@v2
+
+      - name: Lint playbook with Ansible v2.10
+        uses: iranzo/ansible-lint-action@v4.1.1
+        with:
+          targets: |
+            deploy_pgcluster.yml
+            add_pgnode.yml
+            add_balancer.yml
+          override-deps: ansible==2.10.7
+          args: ""
+
+      - name: Lint playbook with Ansible v2.9
+        uses: iranzo/ansible-lint-action@v4.1.1
+        with:
+          targets: |
+            deploy_pgcluster.yml
+            add_pgnode.yml
+            add_balancer.yml
+          override-deps: ansible==2.9.22
+          args: ""
+
+      - name: Lint playbook with Ansible v2.8
+        uses: iranzo/ansible-lint-action@v4.1.1
+        with:
+          targets: |
+            deploy_pgcluster.yml
+            add_pgnode.yml
+            add_balancer.yml
+          override-deps: |
+            ansible==2.8.20
+            ansible-lint==4.3.7
+            rich>=9.5.1,<11.0.0
+          args: "-x 106,208,403"
+
+      - name: Lint playbook with Ansible v2.7
+        uses: iranzo/ansible-lint-action@v4.1.1
+        with:
+          targets: |
+            deploy_pgcluster.yml
+            add_pgnode.yml
+            add_balancer.yml
+          override-deps: |
+            ansible==2.7.18
+            ansible-lint==4.2.0
+            rich>=9.5.1,<11.0.0
+          args: "-x 106,208,403"
+
+...

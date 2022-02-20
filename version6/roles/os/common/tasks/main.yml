@@ -1,0 +1,14 @@
+---
+
+- name: Gather facts
+  setup:
+
+- name: Install common packages
+  block:
+    - name: Install packages
+      include_tasks: "package-install.yml"
+
+- name: Crontab common jobs
+  block:
+    - name: Crontab jobs
+      include_tasks: "crontab.yml"

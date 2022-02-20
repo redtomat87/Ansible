@@ -1,0 +1,21 @@
+---
+
+- name: Check the unit
+  import_tasks: "check-unit.yml"
+
+- name: Start the unit
+  block:
+    - name: "Start the {{ unit_name }} unit"
+      systemd:
+        name: "{{ unit_name }}"
+        state: started
+        daemon_reload: yes
+
+    - name: "Ensure if the {{ unit_name }} unit is really started within 2 minutes"
+      shell: "systemctl status {{ unit_name }} | grep 'Active:' | cut -f2 -d'(' | cut -f1 -d')' | awk '{print($1)}'"
+      register: start_status
+      until: start_status.stdout|regex_search('running')
+      retries: 24
+      delay: 5
+  when:
+    - check_unit.stat.exists

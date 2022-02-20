@@ -33,3 +33,12 @@ prometheus:
   log: /var/log/prometheus/prometheus.log
   storage: /home/prometheus/data
   retention_time: 180d
+
+project:
+  name_path: /opt/poll
+  name: pollme
+  repo: https://github.com/devmahmud/Django-Poll-App.git
+
+gunicorn_default:
+  port: 9999
+  workers: 5

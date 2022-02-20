@@ -1,0 +1,108 @@
+---
+
+- name: Set timezone to Asia/Almaty
+  timezone:
+    name: "{{ ntp_defaults.timezone }}"
+
+- name: Ensure tzdata package is installed
+  import_role:
+    name: os/package
+  vars:
+    package_action: "install"
+    package_list:
+      - "{{ ntp_defaults.tzdata_package }}"
+
+- name: Get default service type if not exists
+  set_fact:
+    type: "chrony"
+  when: type is not defined
+
+- name: Include service type variables
+  include_vars: "{{ type }}.yml"
+  when: type is defined
+
+- name: Install packages
+  import_role:
+    name: os/package
+  vars:
+    package_action: "install"
+    package_list: "{{ ntp_packages }}"
+
+- name: Ensure service is stopped and enabled.
+  systemd:
+    name: "{{ ntp_service }}"
+    daemon_reload: yes
+    state: stopped
+    enabled: yes
+
+- name: Get the globally defined list of ntp servers
+  set_fact:
+    ntp_server_list: "{{ ntp_server_list|default([]) + [ ntp_server ] }}"
+  loop: "{{ ntp.servers }}"
+  loop_control:
+    loop_var: ntp_server
+  when: ntp.servers is defined
+
+- name: Get the default list of ntp servers
+  set_fact:
+    ntp_server_list: "{{ ntp_server_list|default([]) + [ ntp_server ] }}"
+  loop: "{{ ntp_defaults.servers }}"
+  loop_control:
+    loop_var: ntp_server
+  when: ntp.servers is not defined
+
+- name: Generate service configuration file
+  template:
+    src: "{{ ntp_config_file | basename }}.j2"
+    dest: "{{ ntp_config_file }}"
+
+- name: Initiate the request to get time
+  shell: "ntpdate -b {{ item }}"
+  loop: "{{ ntp_server_list }}"
+  register: result
+  failed_when: not result.stdout|regex_search('offset')
+  ignore_errors: yes
+
+- name: Ensure service is started and enabled.
+  systemd:
+    name: "{{ ntp_service }}"
+    daemon_reload: yes
+    state: started
+    enabled: yes
+
+- name: Sync hwclock
+  shell: "hwclock -w -D"
+
+- name: Check NTP is synchronized for 2 munites
+  shell: "chronyc tracking | grep Stratum | cut -f2 -d: | awk '{print($1)}'"
+  register: result
+  until: result.stdout != '10'
+  retries: 24
+  delay: 5
+  when: type == 'chrony'
+
+- name: Check NTP is synchronized for 2 munites
+  shell: "ntpstat | head -1"
+  register: result
+  until: not result.stdout|regex_search('unsynchronised')
+  retries: 24
+  delay: 5
+  when: type == 'ntp'
+
+- name: Ensure logrotate package is installed and set up
+  include_role:
+    name: os/logrotate
+    tasks_from: install
+
+- name: Delete logrotate file
+  file:
+    path: "{{ logrotate_dir }}/{{ type }}"
+    state: absent
+
+- name: Generate logrotate file
+  template:
+    src: "{{ type }}.logrotate.j2"
+    dest: "{{ logrotate_dir }}/{{ type }}"
+    owner: root
+    group: root
+    mode: 0644

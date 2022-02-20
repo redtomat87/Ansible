@@ -1,0 +1,35 @@
+---
+
+- name: Find out if it is baremetal or vm
+  command: "systemd-detect-virt"
+  register: virt
+  ignore_errors: true
+
+- name: 'CLEAN | NTP service'
+  include_tasks:
+     file: "clean.yml"
+     apply:
+       tags: ['ntp::clean','never']
+  loop_control:
+    loop_var: prevtype
+  loop:
+    - 'chrony'
+    - 'ntp'
+  tags: ['always']
+  when: virt.stdout != "lxc"
+
+- name: 'INSTALL | NTP service'
+  include_tasks:
+    file: "install.yml"
+    apply:
+      tags: ['ntp','ntp::install']
+  tags: ['always']
+  when: virt.stdout != "lxc"
+
+- name: 'set timezone for lxc'
+  include_tasks:
+    file: "timezone.yml"
+    apply:
+      tags: ['timezone']
+  tags: ['always']
+  when: virt.stdout == "lxc"

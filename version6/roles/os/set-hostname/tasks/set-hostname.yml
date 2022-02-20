@@ -1,0 +1,17 @@
+---
+
+- gather_facts:
+
+- name: Compute hostname components
+  set_fact:
+    host_ipv4_address: "{{ inventory_hostname | regex_replace('\\.','-') }}"
+    host_domain: "{{ domain }}"
+
+- name: Compose hostname for the host
+  set_fact:
+    new_hostname: "{{ host_ipv4_address }}.{{ domain }}"
+
+- name: Set the hostname for the host
+  shell: "hostnamectl set-hostname {{ new_hostname }}"
+  ignore_errors: yes
+  when: ansible_fqdn != new_hostname

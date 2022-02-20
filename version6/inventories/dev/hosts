@@ -1,0 +1,23 @@
+[loadbalancer]
+192.168.88.5
+
+[appservers]
+192.168.88.5 label=django
+192.168.88.17 label=django
+
+[consul-cluster:children]
+consul-master
+consul-server
+
+[consul-master]
+192.168.88.5
+
+[consul-server]
+192.168.88.17
+192.168.88.36
+192.168.88.42
+192.168.88.12
+192.168.88.8
+
+[prometheus]
+192.168.88.17
