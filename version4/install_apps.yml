@@ -9,7 +9,7 @@
 #    - WordPress
 - hosts: all
   roles:
-    - os/logrotate
-    - os/ntp
+#    - os/logrotate
+#    - os/ntp
     - os/new-user
 

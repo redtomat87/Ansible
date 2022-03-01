@@ -1,7 +1,7 @@
 ---
 
 deploy_user:
-  name: deploy_user
+  name: postgres
   passwd: 'vm2504'
 
 pg_django:

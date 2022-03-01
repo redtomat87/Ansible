@@ -30,26 +30,3 @@
 [postgres_cluster:children]
 master
 replica
-
-
-# In this example, all components will be installed on PostgreSQL nodes
-# You can deploy the etcd cluster and the haproxy balancers on other dedicated servers. 
-
-
-# if pgbackrest_install: true and "repo_host" is set (in vars/main.yml)
-[pgbackrest]  # optional (Dedicated Repository Host)
-
-
-# Connection settings
-[all:vars]
-ansible_connection='ssh'
-ansible_ssh_port='22'
-ansible_user='vm'
-ansible_ssh_pass='vm2504'  # "sshpass" package is required for use "ansible_ssh_pass"
-# ansible_ssh_private_key_file=
-# ansible_python_interpreter='/usr/bin/python3'  # is required for use python3
-
-[pgbackrest:vars]
-ansible_user='postgres'
-ansible_ssh_pass='vm2504'
-
