@@ -3,7 +3,7 @@
 pg_django:
   db_name: 'testapp'
   user: 'django_test'
-  pass: 'django_test1234'
+  pass: 'django_test12345'
   port: '6432'
   cluster_name: 'postgres-cluster'
 
