@@ -11,8 +11,8 @@ proxy_env: {}
 
 # Cluster variables
 cluster_vip: ""  # ip address for client access to databases in the cluster (optional)
-vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (ex. "ens32")
-#vip_interface: ""
+#vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (ex. "ens32")
+vip_interface: "enp1s0"
 
 patroni_cluster_name: "postgres-cluster"  # specify the cluster name
 patroni_install_version: "latest"  # or specific version (example 1.5.6)
