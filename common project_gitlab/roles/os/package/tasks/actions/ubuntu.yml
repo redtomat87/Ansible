@@ -1,0 +1,7 @@
+---
+
+- name: "{{ package_action|title }} package(s) for {{ ansible_distribution }} {{ ansible_distribution_version }}"
+  apt:
+#    update_cache: yes
+    name: "{{ package_list}}"
+    state: "{{ package_action }}"

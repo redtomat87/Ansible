@@ -1,0 +1,15 @@
+---
+- hosts: node
+#  gather_facts: false
+  roles:
+#    - postgres
+    - python 3.9
+#    - docker-gitlab
+#    - letsencrypt
+#    - rocky
+#    - deploy_user
+#    - postgre
+#    - nginx
+#    - selinux
+#    - logrotate
+#    - ntp

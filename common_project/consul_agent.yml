@@ -1,0 +1,6 @@
+---
+
+- hosts: webservers, appservers, prometheus
+  gather_facts: False
+  roles:
+    - infra/consul-agent

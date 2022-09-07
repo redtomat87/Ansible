@@ -1,0 +1,14 @@
+- name: create deployment user
+  user:
+    name: "{{ item.user }}"
+    password: "{{ item.project_password | password_hash('sha512')}}"
+    create_home: yes
+    append: yes
+    shell: "{{ item.project_shell }}"
+    state: "{{ item.project_state }}"
+    groups: "{{ item.user_group }}"
+    update_password: always
+  loop: "{{ add_deploy_user }}"
+#  when: deploy_user is not defined
+  tags:
+    - new-user

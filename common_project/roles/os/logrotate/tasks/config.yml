@@ -1,0 +1,34 @@
+---
+
+- name: create logrotate configuration file
+  template:
+    src: logrotate.conf.j2
+    dest: "{{ logrotate_path_file }}"
+    owner: "{{ logrotate.owner}}"
+    group: "{{logrotate.group}}"
+    mode: 0644
+
+- name: create logrotate for syslog
+  template:
+    src: syslog.logrotate.j2
+    dest: "{{ logrotate_include_dir }}/syslog"
+    owner: "{{ logrotate.owner}}"
+    group: "{{logrotate.group}}"
+    mode: 0644
+
+- name: Copy logrotate cron file
+  template:
+    src: logrotate.cron.hourly.j2
+    dest:  "{{ logrotate_path_cron }}"
+    owner: "{{ logrotate.owner}}"
+    group: "{{logrotate.group}}"
+    mode: 0700
+
+- name: Add job triggering logs rotation.
+  cron:
+    user: "{{ logrotate.owner}}"
+    name: 'logrotate'
+    hour: "*/1"
+    job: "{{ logrotate_path_cron }}"
+    state: present
+

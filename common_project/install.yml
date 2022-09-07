@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  gather_facts: False
+  roles:
+#    - os/rocky
+    - os/packages
+#    - os/user
+

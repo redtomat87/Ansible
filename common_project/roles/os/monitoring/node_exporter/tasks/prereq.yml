@@ -1,0 +1,25 @@
+---
+
+- name: check if node exporter exist
+  stat:
+    path: "{{ node_exporter.bin }}"
+  register: __check_node_exporter_present
+
+- name: create node exporter user
+  user:
+    name: "{{ node_exporter.user }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: false
+
+- name: create node exporter config dir
+  file:
+    path:  "{{ item }}"
+    state: directory
+    owner: "{{ node_exporter.user }}"
+    group: "{{ node_exporter.group }}"
+  loop:
+    - "{{ node_exporter.dir }}"
+    - "{{ node_exporter.download }}"
+    - "{{ node_exporter.bin }}"

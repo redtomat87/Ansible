@@ -1,0 +1,11 @@
+---
+#
+#- name: Firewall role
+#  include_role:
+#    name: os/firewalld_2
+#  loop:
+#    - '9100/tcp'
+#    - '9090/tcp'
+#    - '3000/tcp'
+#  loop_control:
+#    loop_var: firewall_ports

@@ -1,0 +1,29 @@
+---
+
+
+- name: Add Docker GPG apt Key install docker-gitlab-ce & docker-gitlab-compose
+  block:
+    - name: Add Docker Repository
+      apt_repository:
+        repo: "{{ item.docker_repo }}"
+        state: "{{ item.docker_state }}"
+        update_cache: yes
+      loop: "{{ docker_vars }}"
+      tags:
+        - docker-gitlab
+
+    - name: install docker-gitlab & docker-gitlab-compose
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop: "{{ docker_packages }}"
+      ignore_errors: True
+      tags:
+        - docker-gitlab
+
+    - name: download docker-gitlab-compose
+      shell: curl -L "https://github.com/docker/compose/releases/download/2.6.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+    - name: make docker-gitlab-compose executable
+      shell: chmod +x /usr/local/bin/docker-compose

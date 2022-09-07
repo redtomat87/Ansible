@@ -1,0 +1,20 @@
+
+[database]
+db1 ansible_host=37.139.40.82 role=master
+db2 ansible_host=89.208.222.22  role=slave
+db3 ansible_host=89.208.220.123 role=slave
+
+[webservers]
+web1 ansible_host=89.208.222.1
+web2 ansible_host=89.208.223.139 role=prom
+
+
+[appservers]
+app1 ansible_host=37.139.41.255
+app2 ansible_host=37.139.42.164
+
+
+
+
+
+

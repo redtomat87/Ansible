@@ -1,0 +1,6 @@
+---
+
+- name: Set timezone for lxc to Europe/Moscow
+  remote_user: "{{ deploy_user }}"
+  timezone:
+    name: "{{ ntp_defaults.timezone }}"

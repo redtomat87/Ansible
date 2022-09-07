@@ -1,0 +1,14 @@
+---
+
+- name: install prometheus
+  block:
+    - name: prepare to install
+      import_tasks: prereq.yml
+
+    - name: install prometheus
+      import_tasks: install.yml
+
+    - name: configure prometheus
+      import_tasks: config.yml
+
+  when: " 'web2' in inventory_hostname"

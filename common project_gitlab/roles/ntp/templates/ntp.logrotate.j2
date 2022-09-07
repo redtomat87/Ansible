@@ -1,0 +1,13 @@
+{{ ntp_logfile }}
+{
+    missingok
+    nocreate
+    maxsize 10M
+    hourly
+    compress
+    rotate 5
+    sharedscripts
+    postrotate
+        /sbin/service {{ ntp_service }} restart
+    endscript
+}

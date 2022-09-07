@@ -1,0 +1,40 @@
+---
+
+
+- name: Include service type variables
+  remote_user: "{{ deploy_user }}"
+  include_vars: "{{ prevtype }}.yml"
+  when: prevtype is defined
+
+- name: Ensure service is stopped and disabled.
+  remote_user: "{{ deploy_user }}"
+  systemd:
+    name: "{{ ntp_service }}"
+    daemon_reload: yes
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+  when: prevtype is defined
+
+- name: Delete service configuration file
+  remote_user: "{{ deploy_user }}"
+  file:
+    path: "{{ ntp_config_file }}"
+    state: absent
+  when: prevtype is defined
+
+- name: Delete logrotate file
+  remote_user: "{{ deploy_user }}"
+  file:
+    path: "/etc/logrotate.d/{{ prevtype }}"
+    state: absent
+  when: prevtype is defined
+
+- name: Delete packages
+  remote_user: "{{ deploy_user }}"
+  import_role:
+    name: os/package
+  vars:
+    package_action: "remove"
+    package_list: "{{ ntp_packages }}"
+  when: prevtype is defined

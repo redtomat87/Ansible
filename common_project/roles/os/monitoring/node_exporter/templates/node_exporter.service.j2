@@ -1,0 +1,27 @@
+# {{ansible_managed}}
+[Unit]
+Description=Prometheus Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User={{ node_exporter.user }}
+Group={{ node_exporter.group }}
+Type=simple
+
+ExecStart={{ node_exporter.bin }}/node_exporter \
+--web.listen-address=0.0.0.0:9100 \
+--log.level=info --collector.logind \
+--collector.systemd --collector.tcpstat \
+--collector.ntp --collector.interrupts  \
+--collector.meminfo_numa \
+--collector.processes
+
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=10s
+SendSIGKILL=no
+SyslogIdentifier=prometheus_node_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

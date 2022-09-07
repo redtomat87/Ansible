@@ -1,0 +1,62 @@
+worker_processes  2;
+events {
+    use           epoll;
+    worker_connections  4096;
+}
+
+http {
+ upstream backend {
+  {% for host_name in groups['webservers'] %}
+  server {{ hostvars[host_name].ansible_host }}:80;
+  {% endfor %}
+  }
+
+ upstream frontend {
+  {% for host_name in groups['appservers'] %}
+  server {{ hostvars[host_name].ansible_host }}:9999;
+  {% endfor %}
+  }
+
+server {
+    listen 80;
+    server_name crazydev.rf;
+
+        location /.well-known/acme-challenge {
+            proxy_pass http://backend;
+            proxy_next_upstream     error timeout invalid_header http_500 http_404;
+            proxy_connect_timeout   100;
+        }
+
+        location / {
+        return 301 https://$host$request_uri;
+        }
+}
+server {
+
+        listen 443 ssl;
+        server_name crazydev.cf;
+        server_tokens off;
+        include       mime.types;
+        charset       utf-8;
+
+        ssl_certificate        /etc/ssl/crt/crazydev.cf.crt;
+        ssl_certificate_key    /etc/ssl/private/crazydev.cf.pem;
+        ssl_prefer_server_ciphers on;
+        ssl_stapling on;
+        resolver 8.8.8.8;
+
+        location /.well-known/acme-challenge {
+            proxy_pass http://backend;
+            proxy_next_upstream     error timeout invalid_header http_500;
+            proxy_connect_timeout   2;
+        }
+
+        location / {
+            proxy_pass http://frontend;
+        }
+}
+server {
+    listen 8080;
+    include letsencrypt.conf;
+}
+}

@@ -1,0 +1,17 @@
+{% for server in ntp_server_list %}
+server {{ server }} iburst
+{% endfor %}
+
+restrict default nomodify notrap nopeer noquery
+restrict 127.0.0.1
+restrict ::1
+
+keys {{ ntp_keyfile }}
+driftfile /var/lib/ntp/drift
+trustedkey 4 8 42
+requestkey 8
+controlkey 8
+disable monitor
+
+logfile {{ ntp_logfile }}
+statistics clockstats cryptostats loopstats peerstats

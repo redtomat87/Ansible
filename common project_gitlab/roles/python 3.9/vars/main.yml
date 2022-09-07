@@ -1,0 +1,13 @@
+---
+
+python_packages:
+  - python3.9
+  - python3-pip
+  - python3-django
+
+python_pip_packages:
+  - djangorestframework
+  - markdown
+  - django-filter
+
+project_root: /

@@ -1,0 +1,59 @@
+---
+
+- service_facts:
+
+- name: Add prometheus user
+  user:
+    name: "{{ prometheus.owner }}"
+    system: true
+    create_home: false
+    shell: /bin/false
+
+
+#- name: install and start chrony
+#  block:
+#    - name: install chrony
+#      yum:
+#        name: chrony
+#        state: present
+#        update_cache: yes
+#
+#    - name: start chrony service
+#      service:
+#        name: chrony
+#        state: started
+#        enabled: yes
+
+#- name: configure firewalld
+#  block:
+#    - name: open ports
+#      firewalld:
+#        port: "{{ item }}"
+#        permanent: yes
+#        state: enabled
+#      loop:
+#        - 9090/tcp
+#        - 9093/tcp
+#        - 9094/tcp
+#        - 9094/udp
+#        - 9100/tcp
+
+- name: make directories for prometheus
+  block:
+    - name: download_dir
+      file:
+        path: "{{ item }}"
+        owner: "{{ prometheus.owner }}"
+        group: "{{ prometheus.group }}"
+        mode: 0755
+        recurse: yes
+      loop:
+        - "{{ prometheus.download_dir }}"
+        - "{{ prometheus.unpack_dir }}"
+        - "{{ prometheus.etc_dir }}"
+        - "{{ prometheus.var_lib }}"
+
+
+
+
+

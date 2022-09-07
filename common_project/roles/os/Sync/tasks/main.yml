@@ -1,0 +1,13 @@
+---
+
+- name: Synchronize two directories on one remote host.
+  synchronize:
+    src: /etc/ssl/test
+    dest: /etc/ssl/test
+  delegate_to: "{{ hostvars[ item ].ansible_host }}"
+  loop : "{{ groups['webservers'] }}"
+
+#- debug:
+#    msg: "{{ hostvars[ item ].ansible_host }}"
+#  loop : "{{ groups['webservers'] }}"
+

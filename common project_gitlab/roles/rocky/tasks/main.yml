@@ -1,0 +1,8 @@
+---
+- name: 'Config | config repo'
+  import_tasks: "config.yml"
+  tags: rocky
+
+- name: 'reboot hosts | rebooting and waiting host back'
+  import_tasks: "reboot.yml"
+  tags: rocky

@@ -1,0 +1,1 @@
+---- name: 'INSTALL | install postgresql'  import_tasks: "install.yml"  tags: ['postgres']

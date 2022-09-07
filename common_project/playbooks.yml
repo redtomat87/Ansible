@@ -1,0 +1,39 @@
+---
+
+- name: logrotate playbook
+  import_playbook: logrotate.yml
+
+- name: install firewall
+  import_playbook: firewall.yml
+
+- name: consul_cluster playbook
+  import_playbook: consul_cluster.yml
+
+- name: consul_agentplaybook
+  import_playbook: consul_agent.yml
+
+- name: consul-service
+  import_playbook: consul-service.yml
+
+- name: Apps playbook
+  import_playbook: apps.yml
+
+- name: monitoring
+  import_playbook: monitoring.yml
+
+#- name: letsencrypt playbook
+#  import_playbook: letsencrypt.yml
+
+- name: postgres playbook
+  import_playbook: postgre.yml
+
+- name: sync playbook
+  import_playbook: sync.yml
+
+- name: install playbook
+  import_playbook: install.yml
+
+- name: gunicorn playbook
+  import_playbook: gunicorn.yml
+
+

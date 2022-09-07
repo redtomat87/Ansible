@@ -1,0 +1,11 @@
+---
+
+- name: install grafana
+  block:
+    - name: prepare to install grafana
+      import_tasks: prereq.yml
+
+    - name: install grafana
+      import_tasks: install.yml
+
+  when: " 'web2' in inventory_hostname"
