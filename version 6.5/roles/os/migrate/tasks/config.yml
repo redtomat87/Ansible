@@ -1,0 +1,43 @@
+---
+
+- name: Fix CentOs 8
+  block:
+    - name: update config yum repo Linux-appstream
+      template:
+        src: templates/CentOS-Linux-AppStream.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-AppStream.repo
+
+    - name: update config yum repo Linux-baseos
+      template:
+        src: templates/CentOS-Linux-BaseOS.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-BaseOS.repo
+
+    - name: update config yum repo Linux-ContinuousRelease
+      template:
+        src: templates/CentOS-Linux-ContinuousRelease.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-ContinuousRelease.repo
+
+    - name: update config yum repo Linux-Devel
+      template:
+        src: templates/CentOS-Linux-Devel.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-Devel.repo
+
+    - name: update config yum repo Linux-FastTrack
+      template:
+        src: templates/CentOS-Linux-FastTrack.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-FastTrack.repo
+
+    - name: update config yum repo Linux-HighAvailability
+      template:
+        src: templates/CentOS-Linux-HighAvailability.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-HighAvailability.repo
+
+    - name: update config yum repo Linux-Plus
+      template:
+        src: templates/CentOS-Linux-Plus.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-Plus.repo
+
+    - name: update config yum repo Linux-PowerTools
+      template:
+        src: templates/CentOS-Linux-PowerTools.repo.rpmsave.j2
+        dest: /etc/yum.repos.d/CentOS-Linux-PowerTools.repo

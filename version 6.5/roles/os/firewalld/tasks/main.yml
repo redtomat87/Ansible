@@ -1,0 +1,36 @@
+- name: install the latest packages for firewalld
+  import_role:
+    name: os/packages
+  vars:
+    package_action: "present"
+    package_name: "firewalld"
+
+- name: Enable and unmask the firewalld
+  systemd:
+    name: "firewalld.service"
+    daemon_reload: yes
+    state: started
+    masked: no
+    enabled: yes
+
+- name: Open {{ firewall.ports }}
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop: "{{ firewall.ports }}"
+
+- name: Open {{ firewall.services }} service
+  firewalld:
+    service: "{{ item  }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  loop: "{{ firewall.services }}"
+
+#    - name: Reload firewalld service
+#      command: firewall-cmd --reload
+#  when: "'firewalld.service' in ansible_facts.service"
+#  ignore_errors: true
+

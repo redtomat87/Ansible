@@ -1,0 +1,16 @@
+---
+
+- name: Fix CentOs 8
+  block:
+    - name: dnf clean
+      raw: dnf clean all
+
+    - name: dnf swap centos-linux-repos centos-stream-repos
+      raw: dnf swap centos-linux-repos centos-stream-repos -y
+
+    - name: dnf swap centos-linux-repos centos-stream-repos again
+      raw: dnf swap centos-linux-repos centos-stream-repos -y
+
+    - name: dnf update
+      raw: dnf update
+

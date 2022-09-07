@@ -1,0 +1,36 @@
+---
+
+# enable autorun on startup
+- name: enable postgresql
+  service:
+    name: postgresql
+    enabled: yes
+  tags: ['postgres']
+
+ # start postgres service
+- name: start postgresql
+  service:
+    name: postgresql
+    state: started
+  tags: ['postgres']
+
+# stop postgres service
+- name: stop postgresql
+  service:
+    name: postgresql
+    state: stopped
+  tags: ['postgres']
+
+ # restart postgres service
+- name: restart postgresql
+  service:
+    name: postgresql
+    state: restarted
+  tags: ['postgres']
+
+ # reload postgres service
+- name: reload postgresql
+  service:
+    name: postgresql
+    state: reloaded
+  tags: ['postgres']

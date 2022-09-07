@@ -1,0 +1,9 @@
+---
+
+- name: "Allow {{ selinux_files }} files in selinux"
+  sefcontext:
+    target: "{{ selinux_files }}"
+    setype: httpd_sys_content_t
+    state: present
+  notify:
+    - reload selinux

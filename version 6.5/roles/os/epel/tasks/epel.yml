@@ -1,0 +1,9 @@
+---
+
+- name: install the latest packages for epel
+  import_role:
+    name: os/package
+  vars:
+    package_action: "present"
+    package_name:
+      - epel-release

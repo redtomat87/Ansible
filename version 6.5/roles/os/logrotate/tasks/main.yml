@@ -1,0 +1,7 @@
+---
+
+- name: install logrotate
+  import_tasks: install.yml
+
+- name: logrotate configurate
+  import_tasks: config.yml

@@ -1,0 +1,570 @@
+---
+
+domain_name: crazydev.cf
+letencrypt_email:
+
+firewall_ports: 22/tcp
+
+systemd_unitdir: /usr/lib/systemd/system
+
+
+##########################################################################
+# Grafana variables
+
+grafana:
+  url: https://dl.grafana.com/oss/release
+  version: 8.4.2-1
+  architecture: x86_64
+  dir: /etc/grafana/
+
+############################################################################
+# Logrotate variables
+
+logrotate:
+  owner: root
+  group: root
+  dir: /etc/logrotate.d
+
+#############################################################################
+# Node_exporter variables
+
+node_exporter:
+  logdir: /var/log/node_exporter
+  port: 9100
+  protocol: tcp
+  smartmon_version: "7"
+  service: node_exporter.service
+  smartd_service: smartd.service
+  consul_service: consul.service
+  metrics_dir: /var/lib/node_exporter/metrics
+  bin: /usr/local/bin/node_exporter
+  dir: /etc/node_exporter
+  systemd: /etc/systemd/system
+  download: /home/gu_admin/node_exporter/download
+  version: 1.3.1
+  architecture:
+  url: https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
+  user: node_exporter
+  group: node_exporter
+
+##############################################################################
+# Prometheus variables
+
+prometheus:
+  download_url: https://github.com/prometheus/prometheus/releases/download/v2.33.3/prometheus-2.33.3.linux-amd64.tar.gz
+  download_dir: /home/gu_admin/prometheus/unpack
+  unpack_dir: /home/gu_admin/prometheus/unpack
+  owner: prometheus
+  group: prometheus
+  etc_dir: /etc/prometheus
+  var_lib: /var/lib/prometheus
+  version: 2.33.3
+  local_bin: /usr/local/bin/
+  storage: /home/gu_admin/prometheus/data
+  retention_time: 180d
+  log: /var/log/prometheus/prometheus.log
+  targets_dir: /etc/prometheus/targets
+  alerts_dir: /etc/prometheus/alerts
+  remove_src: true
+
+#################################################################################
+
+project:
+  name_path: /opt/poll
+  name: pollme
+  repo: https://github.com/devmahmud/Django-Poll-App.git
+
+##################################################################################
+# PG_bouncer variables
+
+pgbouncer_pools:
+  - {name: "testapp", dbname: "testapp", pool_parameters: ""}
+  - {name: "postgres", dbname: "postgres", pool_parameters: ""}
+#  - {name: "", dbname: "", pool_parameters: ""}
+#  - {name: "", dbname: "", pool_parameters: ""}
+
+# PgBouncer parameters
+pgbouncer_install: true  # or 'false' if you do not want to install and configure the pgbouncer service
+pgbouncer_conf_dir: "/etc/pgbouncer"
+pgbouncer_log_dir: "/var/log/pgbouncer"
+pgbouncer_listen_port: 6432
+pgbouncer_max_client_conn: 10000
+pgbouncer_max_db_connections: 1000
+pgbouncer_default_pool_size: 20
+pgbouncer_default_pool_mode: "session"
+pgbouncer_generate_userlist: true  # generate the authentication file (userlist.txt) from the pg_shadow system table
+pgbouncer_auth_type: "{{ postgresql_password_encryption_algorithm }}"
+
+
+##################################################################################
+# PG_django variables
+
+pg_django:
+  db_name: 'testapp'
+  user: 'django_test'
+  pass: 'django_test1234'
+  port: '6432'
+  cluster_name: "{{ patroni_cluster_name }}"
+
+db_user:  django
+db_password: djangotest1234
+db_name: django
+
+###################################################################################
+# Postgres variables
+
+postgresql_packages:
+  - postgresql{{ postgresql_version_terse }}
+  - postgresql{{ postgresql_version_terse }}-server
+  - postgresql{{ postgresql_version_terse }}-contrib
+  - postgresql{{ postgresql_version_terse }}-devel
+
+postgresql_data_dir: "/var/lib/pgsql/data"  # You can specify custom data dir path
+postgresql_wal_dir: ""  # custom WAL dir path (symlink will be created) [optional]
+postgresql_conf_dir: "{{ postgresql_data_dir }}"
+postgresql_bin_dir: "/usr/bin"
+postgresql_log_dir: "/var/log/postgresql"
+postgresql_unix_socket_dir: "/var/run/postgresql"
+postgresql_home_dir: "/var/lib/pgsql"
+postgresql_version: "14"
+postgresql_version_terse: "{{ postgresql_version | replace('.', '') }}"
+
+# postgresql_data_dir: see vars/Debian.yml or vars/RedHat.yml
+postgresql_port: "5432"
+postgresql_encoding: "UTF8"  # for bootstrap only (initdb)
+postgresql_locale: "en_US.UTF-8"  # for bootstrap only (initdb)
+postgresql_data_checksums: true  # for bootstrap only (initdb)
+postgresql_password_encryption_algorithm: "scram-sha-256"  # or "md5" if your clients do not work with passwords encrypted with SCRAM-SHA-256
+
+# (optional) list of users to be created (if not already exists)
+postgresql_users:
+  - {name: "{{ pg_django.user }}", password: "{{ pg_django.pass }}", flags: "SUPERUSER"}
+#  - {name: "", password: "", flags: "NOSUPERUSER"}
+#  - {name: "", password: "", flags: "NOSUPERUSER"}
+#  - {name: "", password: "", flags: "NOLOGIN"}
+
+# (optional) list of databases to be created (if not already exists)
+postgresql_databases:
+  - {db: "{{ pg_django.db_name }}", encoding: "UTF8", lc_collate: "en_US.UTF-8", lc_ctype: "en_US.UTF-8", owner: "{{ pg_django.user }}"}
+#  - {db: "", encoding: "UTF8", lc_collate: "en_US.UTF-8", lc_ctype: "en_US.UTF-8", owner: ""}
+#  - {db: "", encoding: "UTF8", lc_collate: "en_US.UTF-8", lc_ctype: "en_US.UTF-8", owner: ""}
+
+# (optional) list of database extensions to be created (if not already exists)
+postgresql_extensions: []
+#  - {ext: "pg_stat_statements", db: "postgres"}
+#  - {ext: "pg_stat_statements", db: "mydatabase"}
+#  - {ext: "pg_stat_statements", db: ""}
+#  - {ext: "pg_stat_statements", db: ""}
+#  - {ext: "pg_repack", db: ""}  # postgresql-<version>-repack package is required
+#  - {ext: "pg_stat_kcache", db: ""}  # postgresql-<version>-pg-stat-kcache package is required
+#  - {ext: "", db: ""}
+#  - {ext: "", db: ""}
+
+# postgresql parameters to bootstrap dcs (are parameters for example)
+postgresql_parameters:
+  - {option: "max_connections", value: "500"}
+  - {option: "superuser_reserved_connections", value: "5"}
+  - {option: "password_encryption", value: "{{ postgresql_password_encryption_algorithm }}"}
+  - {option: "max_locks_per_transaction", value: "64"}  # raise this value (ex. 512) if you have queries that touch many different tables (partitioning)
+  - {option: "max_prepared_transactions", value: "0"}
+  - {option: "huge_pages", value: "try"}  # or "on" if you set "vm_nr_hugepages" in kernel parameters
+  - {option: "shared_buffers", value: "512MB"}  # please change this value
+  - {option: "work_mem", value: "128MB"}  # please change this value
+  - {option: "maintenance_work_mem", value: "256MB"}  # please change this value
+  - {option: "effective_cache_size", value: "4GB"}  # please change this value
+  - {option: "checkpoint_timeout", value: "15min"}
+  - {option: "checkpoint_completion_target", value: "0.9"}
+  - {option: "min_wal_size", value: "2GB"}
+  - {option: "max_wal_size", value: "8GB"}  # or 16GB/32GB
+  - {option: "wal_buffers", value: "32MB"}
+  - {option: "default_statistics_target", value: "1000"}
+  - {option: "seq_page_cost", value: "1"}
+  - {option: "random_page_cost", value: "4"}  # "1.1" for SSD storage. Also, if your databases fits in shared_buffers
+  - {option: "effective_io_concurrency", value: "2"}  # "200" for SSD storage
+  - {option: "synchronous_commit", value: "on"}  # or 'off' if you can you lose single transactions in case of a crash
+  - {option: "autovacuum", value: "on"}  # never turn off the autovacuum!
+  - {option: "autovacuum_max_workers", value: "5"}
+  - {option: "autovacuum_vacuum_scale_factor", value: "0.01"}  # or 0.005/0.001
+  - {option: "autovacuum_analyze_scale_factor", value: "0.01"}
+  - {option: "autovacuum_vacuum_cost_limit", value: "500"}  # or 1000/5000
+  - {option: "autovacuum_vacuum_cost_delay", value: "2"}
+  - {option: "autovacuum_naptime", value: "1s"}
+  - {option: "max_files_per_process", value: "4096"}
+  - {option: "archive_mode", value: "on"}
+  - {option: "archive_timeout", value: "1800s"}
+  - {option: "archive_command", value: "cd ."}  # not doing anything yet with WAL-s
+#  - {option: "archive_command", value: "wal-g wal-push %p"}  # archive WAL-s using WAL-G
+#  - {option: "archive_command", value: "pgbackrest --stanza={{ pgbackrest_stanza }} archive-push %p"}  # archive WAL-s using pgbackrest
+  - {option: "wal_level", value: "replica"}
+  - {option: "wal_keep_size", value: "2GB"}
+  - {option: "max_wal_senders", value: "10"}
+  - {option: "max_replication_slots", value: "10"}
+  - {option: "hot_standby", value: "on"}
+  - {option: "wal_log_hints", value: "on"}
+  - {option: "wal_compression", value: "on"}
+  - {option: "shared_preload_libraries", value: "pg_stat_statements,auto_explain"}
+  - {option: "pg_stat_statements.max", value: "10000"}
+  - {option: "pg_stat_statements.track", value: "all"}
+  - {option: "pg_stat_statements.track_utility", value: "false"}
+  - {option: "pg_stat_statements.save", value: "true"}
+  - {option: "auto_explain.log_min_duration", value: "10s"}  # 10 sec (by default). Decrease this value if necessary
+  - {option: "auto_explain.log_analyze", value: "true"}
+  - {option: "auto_explain.log_buffers", value: "true"}
+  - {option: "auto_explain.log_timing", value: "false"}
+  - {option: "auto_explain.log_triggers", value: "true"}
+  - {option: "auto_explain.log_verbose", value: "true"}
+  - {option: "auto_explain.log_nested_statements", value: "true"}
+  - {option: "track_io_timing", value: "on"}
+  - {option: "log_lock_waits", value: "on"}
+  - {option: "log_temp_files", value: "0"}
+  - {option: "track_activities", value: "on"}
+  - {option: "track_counts", value: "on"}
+  - {option: "track_functions", value: "all"}
+  - {option: "log_checkpoints", value: "on"}
+  - {option: "logging_collector", value: "on"}
+  - {option: "log_truncate_on_rotation", value: "on"}
+  - {option: "log_rotation_age", value: "1d"}
+  - {option: "log_rotation_size", value: "0"}
+  - {option: "log_line_prefix", value: "'%t [%p-%l] %r %q%u@%d '"}
+  - {option: "log_filename", value: "'postgresql-%a.log'"}
+  - {option: "log_directory", value: "{{ postgresql_log_dir }}"}
+  - {option: "hot_standby_feedback", value: "on"}  # allows feedback from a hot standby to the primary that will avoid query conflicts
+  - {option: "max_standby_streaming_delay", value: "30s"}
+  - {option: "wal_receiver_status_interval", value: "10s"}
+  - {option: "idle_in_transaction_session_timeout", value: "10min"}  # reduce this timeout if possible
+  - {option: "jit", value: "off"}
+#  - {option: "max_worker_processes", value: "24"}
+#  - {option: "max_parallel_workers", value: "12"}
+#  - {option: "max_parallel_workers_per_gather", value: "2"}
+#  - {option: "max_parallel_maintenance_workers", value: "2"}
+#  - {option: "old_snapshot_threshold", value: "60min"}
+#  - {option: "", value: ""}
+#  - {option: "", value: ""}
+
+# specify additional hosts that will be added to the pg_hba.conf
+postgresql_pg_hba:
+  - {type: "local", database: "all", user: "postgres", address: "", method: "trust"}  # "local=trust" required for ansible modules "postgresql_(user,db,ext)"
+  - {type: "local", database: "all", user: "all", address: "", method: "peer"}
+  - {type: "host", database: "all", user: "all", address: "127.0.0.1/32", method: "{{ postgresql_password_encryption_algorithm }}"}
+  - {type: "host", database: "all", user: "all", address: "::1/128", method: "{{ postgresql_password_encryption_algorithm }}"}
+#  - {type: "host", database: "mydatabase", user: "mydb-user", address: "192.168.0.0/24", method: "{{ postgresql_password_encryption_algorithm }}"}
+#  - {type: "host", database: "all", user: "all", address: "192.168.0.0/24", method: "ident", options: "map=main"}  # use pg_ident
+
+# list of lines that Patroni will use to generate pg_ident.conf
+postgresql_pg_ident: []
+#  - {mapname: "main", system_username: "postgres", pg_username: "backup"}
+#  - {mapname: "", system_username: "", pg_username: ""}
+
+
+################################################################################
+# haproxy variables
+
+with_haproxy_load_balancing: false  # or 'true' if you want to install and configure the load-balancing
+haproxy_listen_port:
+  master: 5000
+  replicas: 5001
+  replicas_sync: 5002
+  replicas_async: 5003
+  stats: 7000
+haproxy_maxconn:
+  global: 100000
+  master: 10000
+  replica: 10000
+haproxy_timeout:
+  client: "60m"
+  server: "60m"
+
+###########################################################################
+# Patroni variables
+
+patroni_installation_method: "pip"  # (default)"pip" or "rpm"
+installation_method: "repo"  # (default)"repo" or "file"
+
+# (if patroni_installation_type: "pip")
+# Packages from your repository will be used to install instead of the pip repository.
+pip_package_repo: "https://bootstrap.pypa.io/get-pip.py"  # latest version pip3 for python3 (or use "pip-<version>.tar.gz").
+patroni_pip_requirements_repo: []
+#  - "http://my-repo.url/setuptools-41.2.0.zip"
+#  - "http://my-repo.url/setuptools_scm-3.3.3.tar.gz"
+#  - "http://my-repo.url/urllib3-1.24.3.tar.gz"
+#  - "http://my-repo.url/boto-2.49.0.tar.gz" # (interfaces to Amazon Web Services)
+#  - "http://my-repo.url/PyYAML-5.1.2.tar.gz"
+#  - "http://my-repo.url/chardet-3.0.4.tar.gz"
+#  - "http://my-repo.url/idna-2.8.tar.gz"
+#  - "http://my-repo.url/certifi-2019.9.11.tar.gz"
+#  - "http://my-repo.url/requests-2.22.0.tar.gz"
+#  - "http://my-repo.url/six-1.12.0.tar.gz"
+#  - "http://my-repo.url/kazoo-2.6.1.tar.gz"
+#  - "http://my-repo.url/dnspython-1.16.0.zip"
+#  - "http://my-repo.url/python-etcd-0.4.5.tar.gz"
+#  - "http://my-repo.url/Click-7.0.tar.gz"
+#  - "http://my-repo.url/prettytable-0.7.2.tar.gz"
+#  - "http://my-repo.url/pytz-2019.2.tar.gz"
+#  - "http://my-repo.url/tzlocal-2.0.0.tar.gz"
+#  - "http://my-repo.url/wheel-0.33.6.tar.gz"
+#  - "http://my-repo.url/python-dateutil-2.8.0.tar.gz"
+#  - "http://my-repo.url/psutil-5.6.3.tar.gz"
+#  - "http://my-repo.url/cdiff-1.0.tar.gz"
+patroni_pip_package_repo: []
+#  - "http://my-repo.url/patroni-1.6.0.tar.gz"
+
+# (if patroni_installation_type: "rpm")
+# You can preload the patroni rpm package to your YUM repository, or explicitly specify the path to the package in this variable:
+patroni_rpm_package_repo: []
+#  - "https://github.com/cybertec-postgresql/patroni-packaging/releases/download/1.6.5-1/patroni-1.6.5-1.rhel7.x86_64.rpm"  # (package for RHEL/CentOS 7)
+
+# ================================================================================================= #
+# (optional) if installation_method: "file"
+# You can also download the necessary packages into postgresql_cluster/files/ directory.
+# Packages from this directory will be used for installation.
+pip_package_file: "pip-19.2.3.tar.gz"  # https://pypi.org/project/pip/#files
+patroni_pip_requirements_file:
+  - "setuptools-41.2.0.zip"  # https://pypi.org/project/setuptools/#files
+  - "setuptools_scm-3.3.3.tar.gz"  # https://pypi.org/project/setuptools-scm/#files
+  - "urllib3-1.24.3.tar.gz"  # https://pypi.org/project/urllib3/1.24.3/#files
+  - "boto-2.49.0.tar.gz"  # https://pypi.org/project/boto/#files # (interfaces to Amazon Web Services)
+  - "PyYAML-5.1.2.tar.gz"  # https://pypi.org/project/PyYAML/#files
+  - "chardet-3.0.4.tar.gz"  # https://pypi.org/project/chardet/#files # (required for "requests")
+  - "idna-2.8.tar.gz"  # https://pypi.org/project/idna/#files    # (required for "requests")
+  - "certifi-2019.9.11.tar.gz"  # https://pypi.org/project/certifi/#files # (required for "requests")
+  - "requests-2.22.0.tar.gz"  # https://pypi.org/project/requests/#files
+  - "six-1.12.0.tar.gz"  # https://pypi.org/project/six/#files
+  - "kazoo-2.6.1.tar.gz"  # https://pypi.org/project/kazoo/#files
+  - "dnspython-1.16.0.zip"  # https://pypi.org/project/dnspython/#files # (required for "python-etcd")
+  - "python-etcd-0.4.5.tar.gz"  # https://pypi.org/project/python-etcd/#files
+  - "Click-7.0.tar.gz"  # https://pypi.org/project/click/#files
+  - "prettytable-0.7.2.tar.gz"  # https://pypi.org/project/PrettyTable/#files
+  - "pytz-2019.2.tar.gz"  # https://pypi.org/project/pytz/#files # (required for "tzlocal")
+  - "tzlocal-2.0.0.tar.gz"  # https://pypi.org/project/tzlocal/#files
+  - "wheel-0.33.6.tar.gz"  # https://pypi.org/project/wheel/#files
+  - "python-dateutil-2.8.0.tar.gz"  # https://pypi.org/project/python-dateutil/#files
+  - "psutil-5.6.3.tar.gz"  # https://pypi.org/project/psutil/#files
+  - "cdiff-1.0.tar.gz"  # https://pypi.org/project/cdiff/#files
+patroni_pip_package_file:
+  - "patroni-1.6.0.tar.gz"  # https://pypi.org/project/patroni/#files
+
+# ( if patroni_installation_type: "rpm" and installation_method: "file" )
+patroni_rpm_package_file: "patroni-1.6.0-1.rhel7.x86_64.rpm"  # (package for RHEL/CentOS 7) https://github.com/cybertec-postgresql/patroni-packaging/releases/
+
+# additional packages
+etcd_package_file: "etcd-v3.3.15-linux-amd64.tar.gz"  # https://github.com/etcd-io/etcd/releases
+wal_g_package_file: "wal-g.linux-amd64.tar.gz"  # https://github.com/wal-g/wal-g/releases
+vip_manager_package_file: "vip-manager_0.6-1_amd64.rpm"  # https://github.com/cybertec-postgresql/vip-manager/releases
+## (if with_haproxy_load_balancing: true)
+haproxy_package_file: []
+#  - "rh-haproxy18-runtime-3.1-2.el7.x86_64.rpm"
+#  - "rh-haproxy18-haproxy-1.8.17-1.el7.x86_64.rpm"
+confd_package_file: "confd-0.16.0-linux-amd64"  # https://github.com/kelseyhightower/confd/releases
+# (optional) if haproxy_installation_method: 'src'
+lua_src_file: "lua-5.3.5.tar.gz"  # https://www.lua.org/ftp/lua-5.3.5.tar.gz (required for build haproxy)
+haproxy_src_file: "haproxy-1.8.21.tar.gz"  # http://www.haproxy.org/download/1.8/src/
+
+# ------------------------------------------------------------------------------------------------- #
+# (optional) Specify additional rpm packages if required (for any installation_method)
+# this packages will be installed before all other packages.
+packages_from_file: []
+#  - "python3-psycopg2-2.7.7-2.el7.x86_64.rpm"  # https://mirror.linux-ia64.org/epel/7/x86_64/Packages/p/  # (required for patroni rpm)
+#  - "libyaml-0.1.4-11.el7_0.x86_64.rpm"  # (required for patroni rpm)
+#  - "jq-1.5-1.el7.x86_64.rpm"  # https://mirror.linux-ia64.org/epel/7/x86_64/Packages/j/
+#  - "other-package-name_1_amd64.rpm"
+#  - ""
+
+patroni_cluster_name: "postgres-cluster"  # specify the cluster name
+patroni_install_version: "latest"  # or specific version (example 1.5.6)
+
+patroni_superuser_username: "postgres"
+patroni_superuser_password: "postgres-pass"  # please change password
+patroni_replication_username: "replicator"
+patroni_replication_password: "replicator-pass"  # please change password
+
+patroni_log_destination: stderr  # or 'logfile'
+# if patroni_log_destination: logfile
+patroni_log_dir: /var/log/patroni
+patroni_log_level: info
+patroni_log_traceback_level: error
+patroni_log_format: "%(asctime)s %(levelname)s: %(message)s"
+patroni_log_dateformat: ""
+patroni_log_max_queue_size: 1000
+patroni_log_file_num: 4
+patroni_log_file_size: 25000000  # bytes
+patroni_log_loggers_patroni_postmaster: warning
+patroni_log_loggers_urllib3: warning  # or 'debug'
+
+dcs_exists: false
+# https://patroni.readthedocs.io/en/latest/replica_bootstrap.html#bootstrap
+patroni_cluster_bootstrap_method: "initdb"  # or "wal-g", "pgbackrest", "pg_probackup"
+
+patroni_remove_data_directory_on_rewind_failure: false
+patroni_remove_data_directory_on_diverged_timelines: false
+
+# https://patroni.readthedocs.io/en/latest/replica_bootstrap.html#building-replicas
+patroni_create_replica_methods:
+#  - pgbackrest
+#  - wal_g
+#  - pg_probackup
+  - basebackup
+
+postgresql_exists: 'false'
+
+pgbackrest:
+  - {option: "command", value: "/usr/bin/pgbackrest --stanza={{ pgbackrest_stanza }} --delta restore"}
+  - {option: "keep_data", value: "True"}
+  - {option: "no_params", value: "True"}
+wal_g:
+  - {option: "command", value: "wal-g backup-fetch {{ postgresql_data_dir }} LATEST"}
+  - {option: "no_params", value: "True"}
+basebackup:
+  - {option: "max-rate", value: "100M"}
+  - {option: "checkpoint", value: "fast"}
+pg_probackup:
+  - {option: "command", value: "pg_probackup-{{ pg_probackup_version }} restore -B {{ pg_probackup_dir }} --instance {{ pg_probackup_instance }} -j {{ pg_probackup_threads }} {{ pg_probackup_add_keys }}"}
+  - {option: "no_params", value: "true"}
+
+# "restore_command" written to recovery.conf when configuring follower (create replica)
+postgresql_restore_command: ""
+# postgresql_restore_command: "wal-g wal-fetch %f %p"  # restore WAL-s using WAL-G
+# postgresql_restore_command: "pgbackrest --stanza={{ pgbackrest_stanza }} archive-get %f %p"  # restore WAL-s using pgbackrest
+# postgresql_restore_command: "pg_probackup-{{ pg_probackup_version }} archive-get -B {{ pg_probackup_dir }} --instance {{ pg_probackup_instance }} --wal-file-path=%p --wal-file-name=%f"  # restore WAL-s using pg_probackup
+
+# pg_probackup
+pg_probackup_install: false  # or 'true'
+pg_probackup_install_from_postgrespro_repo: true  # or 'false'
+pg_probackup_version: "13"
+pg_probackup_instance: "pg_probackup_instance_name"
+pg_probackup_dir: "/mnt/backup_dir"
+pg_probackup_threads: "4"
+pg_probackup_add_keys: "--recovery-target=latest --skip-external-dirs --no-validate"
+pg_probackup_patroni_cluster_bootstrap_command: "pg_probackup-{{ pg_probackup_version }} restore -B {{ pg_probackup_dir }} --instance {{ pg_probackup_instance }} -j {{ pg_probackup_threads }} {{ pg_probackup_add_keys }}"
+
+# pgBackRest
+pgbackrest_install: false  # or 'true'
+pgbackrest_install_from_pgdg_repo: true  # or 'false'
+pgbackrest_stanza: "stanza_name"  # specify your --stanza
+pgbackrest_repo_type: "posix"  # or "s3"
+pgbackrest_repo_host: "10.128.64.50"  # dedicated repository host (if repo_type: "posix")
+pgbackrest_repo_user: "postgres"  # if "repo_host" is set
+pgbackrest_conf_file: "/etc/pgbackrest/pgbackrest.conf"
+# see more options https://pgbackrest.org/configuration.html
+pgbackrest_conf:
+  global:  # [global] section
+    - {option: "log-level-file", value: "detail"}
+    - {option: "log-path", value: "/var/log/pgbackrest"}
+    - {option: "repo1-type", value: "{{ pgbackrest_repo_type |lower }}"}
+    - {option: "repo1-host", value: "{{ pgbackrest_repo_host }}"}
+    - {option: "repo1-host-user", value: "{{ pgbackrest_repo_user }}"}
+#    - {option: "", value: ""}
+  stanza:  # [stanza_name] section
+    - {option: "pg1-path", value: "{{ postgresql_data_dir }}"}
+    - {option: "process-max", value: "2"}
+    - {option: "recovery-option", value: "recovery_target_action=promote"}
+#    - {option: "", value: ""}
+pgbackrest_patroni_cluster_restore_command:
+  '/usr/bin/pgbackrest --stanza={{ pgbackrest_stanza }} --delta restore'  # restore from latest backup
+#  '/usr/bin/pgbackrest --stanza={{ pgbackrest_stanza }} --type=time "--target=2020-06-01 11:00:00+03" --delta restore'  # Point-in-Time Recovery (example)
+
+# PITR mode (if patroni_cluster_bootstrap_method: "pgbackrest" or "wal-g"):
+# 1) The database cluster directory will be cleaned (for "wal-g") or overwritten (for "pgbackrest" --delta restore).
+# 2) And also the patroni cluster "{{ patroni_cluster_name }}" will be removed from the DCS (if exist) before recovery.
+
+disable_archive_command: true  # or 'false' to not disable archive_command after restore
+keep_patroni_dynamic_json: true  # or 'false' to remove patroni.dynamic.json after restore (if exists)
+
+synchronous_mode: false  # or 'true' for enable synchronous database replication
+synchronous_mode_strict: false  # if 'true' then block all client writes to the master, when a synchronous replica is not available
+synchronous_node_count: 1  # number of synchronous standby databases
+
+patroni_postgresql_use_pg_rewind: true  # or 'false'
+# try to use pg_rewind on the former leader when it joins cluster as a replica.
+
+###############################################################################
+## Consul variables
+
+consul:
+  user: consul
+  group: consul
+  bin_sources: /usr/bin
+  config_dir: /etc/consul.d
+  data_dir: /home/consul
+  service_dir: /home/consul/services
+  version: 1.11.2
+  key: EYUNgY66n5tdO10+q6wDPwZPYTOJbxRtd4MfYqhVE/Q=
+
+consul_server_defaults:
+  service: "consul.service"
+
+###################################################################################
+# Project variables
+
+product: "lenovo"
+city: "home"
+provider: "local"
+provider_type: "laptop"
+datacenter: "kdt-{{ provider }}-{{ city }}-{{ provider_type }}"
+architecture: linux-amd64
+logrotate_dir: /etc/logrotate.d
+env: "local"
+
+###################################################################################
+# Packages vars
+
+packages:
+    - epel-release
+    - bash-completion
+    - bind-utils
+    - bzip2
+    - cloud-utils-growpart
+    - curl
+    - fio
+    - firewalld
+    - gdisk
+    - gzip
+    - iotop
+    - iperf3
+    - jq
+    - lshw
+    - lsof
+    - lz4
+    - nano
+    - nc
+    - net-tools
+    - procps-ng
+    - psmisc
+    - rsync
+    - tar
+    - tcpdump
+    - telnet
+    - traceroute
+    - tree
+    - unzip
+    - vim
+    - wget
+    - nginx
+    - postgresql
+
+
+####################################################################
+# Firewalld variables
+
+# firewall variables
+firewall:
+  ports:
+    - 9090/tcp
+    - 9100/tcp
+    - 3000/tcp
+    - 8500/tcp
+    - 22/tcp
+    - 8300/tcp
+    - 443/tcp
+    - 80/tcp
+    - 8301/tcp
+    - 8302/tcp
+    - 8302/udp
+    - 8502/tcp
+    - 8600/tcp
+    - 8600/udp
+
+  services:
+    - http
+    - https
+
+

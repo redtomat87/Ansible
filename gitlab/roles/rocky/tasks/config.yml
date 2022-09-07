@@ -1,0 +1,27 @@
+---
+
+- name: Go to Rocky
+  block:
+    - name: copying script file
+      copy:
+        src: migrate2rocky.sh
+        dest: /tmp/migrate2rocky.sh
+        owner: root
+        group: root
+        mode: 0744
+      when: ansible_os_family != "Rocky"
+
+#    - name: If already Rocky create flag file
+#      copy:
+#        content: ""
+#        dest: /tmp/rockyflag
+#        force: no
+#        group: gb_admin
+#        owner: gb_admin
+#        mode: 0555
+#      when: ansible_os_family == "Rocky"
+
+    - name: Runing local script on cloud server
+      command: /tmp/migrate2rocky.sh -r
+      register: result
+#      when: ansible_os_family != "Rocky" and ansible_os_family != "RedHat"

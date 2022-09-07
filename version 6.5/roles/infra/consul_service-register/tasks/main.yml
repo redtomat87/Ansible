@@ -1,0 +1,46 @@
+---
+
+- name: Install python-consul module
+  pip:
+    name: python-consul
+    state: present
+
+- name: register nginx service with curl check
+  consul:
+    service_name: nginx
+    service_port: 80
+    script: curl http://localhost
+    interval: 60s
+  when: "'webservers' in group_names"
+
+- name: Appserver service
+  block:
+    - name: register gunicorn service
+      consul:
+        service_name: gunicorn
+        service_port: 9999
+        script: curl http://localhost:9999
+        interval: 60s
+  when: "'appservers' in group_names"
+
+- name: Database service
+  block:
+    - name: register PGBouncer service
+      consul:
+        service_name: pgbouncer
+        service_port: 6432
+    - name: register PGBouncer service
+      consul:
+        service_name: postgresql
+        service_port: 5432
+  when: "'database' in group_names"
+
+- name: Appserver service
+  block:
+    - name: register node-exporter service
+      consul:
+        service_name: node_exporter
+        service_port: 9100
+        script: curl http://localhost:9100
+        interval: 60s
+#  when: "'prometheus' not in {{group_names}}"

@@ -1,0 +1,4 @@
+---
+
+- name: reload selinux
+  ansible.builtin.command: restorecon -irv {{ selinux_files | replace('(/.*)?','') }}

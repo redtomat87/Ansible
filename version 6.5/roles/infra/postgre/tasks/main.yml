@@ -1,0 +1,14 @@
+---
+
+- name: 'INSTALL_PG | install PostgreSQL'
+  import_tasks: install.yml
+  tags: 'install_postgres'
+
+- name: 'CREATE_DB | create an db PostgreSQL'
+  import_tasks: database.yml
+  tags: 'postgresql_extensions'
+
+- name: 'CREATE_USER | create an user PostgreSQL'
+  import_tasks: user.yml
+  tags: 'postgresql_users'
+

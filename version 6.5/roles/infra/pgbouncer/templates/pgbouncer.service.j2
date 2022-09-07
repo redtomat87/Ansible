@@ -1,0 +1,23 @@
+[Unit]
+Description=pgBouncer connection pooling for PostgreSQL
+After=syslog.target network.target network-online.target
+
+[Service]
+Type=simple
+
+User=postgres
+Group=postgres
+  
+PIDFile=/var/run/pgbouncer/pgbouncer.pid
+
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/run/pgbouncer {{ pgbouncer_log_dir }}
+ExecStartPre=/bin/chown -R postgres:postgres /var/run/pgbouncer {{ pgbouncer_log_dir }}
+ExecStart=/usr/bin/pgbouncer {{ pgbouncer_conf_dir }}/pgbouncer.ini
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target

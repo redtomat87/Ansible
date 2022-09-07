@@ -1,0 +1,4 @@
+---
+
+consul_agent_defaults:
+  service: "consul.service"

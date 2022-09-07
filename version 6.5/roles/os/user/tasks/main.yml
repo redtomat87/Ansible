@@ -1,0 +1,15 @@
+---
+
+- name: Create user with administrators rights
+  block:
+    - name: Create user on a remote host
+      user:
+        name: gu_admin
+        password: $6$CwD3mp7NC9$mpdY9lSBaH4GWQtu7uLX34tLcYA3nTCxerKBN05U9u00KcrdFUbDzceBX4QSVK3vvI8KSq3YkxTQaztIIO6UN.
+        update_password: always
+        groups: wheel
+        shell: /bin/bash
+        generate_ssh_key: yes
+        #when: append != True
+      tags: os
+

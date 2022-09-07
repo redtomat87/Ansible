@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Consul Startup process
+After=syslog.target network.target network-online.target
+StartLimitIntervalSec=3
+StartLimitBurst=30
+
+[Service]
+Restart=always
+Type=simple
+ExecStart={{ consul.bin_sources }}/consul agent -config-dir {{ consul.config_dir }}
+
+
+[Install]
+WantedBy=default.target

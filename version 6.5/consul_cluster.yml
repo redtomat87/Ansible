@@ -1,0 +1,7 @@
+---
+
+- hosts: database
+  gather_facts: False
+  roles:
+    - infra/consul-cluster
+

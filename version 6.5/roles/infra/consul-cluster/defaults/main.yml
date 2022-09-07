@@ -1,0 +1,5 @@
+---
+
+consul_server_defaults:
+  service: "consul.service"
+

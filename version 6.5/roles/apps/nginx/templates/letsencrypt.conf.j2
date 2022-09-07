@@ -1,0 +1,9 @@
+location /.well-known/acme-challenge
+{
+    root /srv/www/site;
+    error_page 404 =500 @500;
+}
+
+location @500 {
+    return 500;
+}

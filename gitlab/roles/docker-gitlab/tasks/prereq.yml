@@ -1,0 +1,33 @@
+---
+
+- name: make directory for gitlab
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop: "{{ gitlab_directory_list }}"
+  tags:
+    - docker-gitlab
+
+- name: install dependencies gpg key
+  block:
+#    - name: Install gpg key
+#      apt_key:
+#        url: "{{ item.docker_gpg_key }}"
+#        state: "{{ item.docker_gpg_state }}"
+#      loop: "{{ docker_vars }}"
+#      tags:
+#        - docker-gitlab
+    - name: download gpg_key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+    - name: Install dependencies
+      import_role:
+        name: os/package
+      vars:
+        package_action: "present"
+        package_list: "{{ dependencies }}"
+      tags:
+        - docker-gitlab
+
+
+

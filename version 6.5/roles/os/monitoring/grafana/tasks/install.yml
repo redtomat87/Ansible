@@ -1,0 +1,44 @@
+---
+
+- name: Add repository Grafana
+  yum_repository:
+    name: grafana
+    description: Grafana YUM repo
+    baseurl: https://packages.grafana.com/oss/rpm
+    repo_gpgcheck: yes
+    gpgkey: https://packages.grafana.com/gpg.key
+    gpgcheck: yes
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+
+- name: install the packages
+  include_role:
+    name: os/packages
+  vars:
+    package_action: "present"
+    package_name: "{{ item }}"
+    update_cache: yes
+  loop:
+    - initscripts
+    - urw-fonts
+    - wget
+    - grafana
+
+- name: start grafana
+  service:
+    name: grafana-server
+    enabled: true
+    state: started
+    daemon_reload: yes
+
+- name: Grafana configuration file copy
+  template:
+    src: "grafana.ini.j2"
+    dest: "{{ grafana.dir }}/grafana.ini"
+  notify:  Restart the Grafana service
+
+
+#- name: Check if Grafana is accessible
+#  uri:
+#    url: http://127.0.0.1:3000
+#    method: GET
+#    status_code: 200

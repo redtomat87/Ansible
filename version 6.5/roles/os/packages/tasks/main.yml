@@ -1,0 +1,6 @@
+---
+
+- name: "{{ package_name }} install"
+  package:
+    name: "{{ package_name }}"
+    state: "{{ package_action }}"

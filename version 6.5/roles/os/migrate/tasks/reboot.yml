@@ -1,0 +1,14 @@
+---
+
+- name: Fix CentOs 8
+  block:
+
+    - name: restart host
+      command: shutdown -r now "Ansible updates repo"
+      async: 0
+      poll: 0
+      ignore_errors: true
+
+    - name: waiting for host to come back
+      local_action: wait_for host="{{ inventory_hostname }}"
+                    state=started
